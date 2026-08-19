@@ -30,7 +30,7 @@ pipeline {
             steps {
 
                 sh """"
-                docker build -t gopikrishna/backend:${appVersion} .
+                docker build -t gopikrishna05/backend:${appVersion} .
                 docker images
                 """
             }
