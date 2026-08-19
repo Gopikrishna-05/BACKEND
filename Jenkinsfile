@@ -29,7 +29,7 @@ pipeline {
         stage('Docker build') {
             steps {
 
-                sh """"
+                sh """
                 docker build -t gopikrishna05/backend:${appVersion} .
                 docker images
                 """
