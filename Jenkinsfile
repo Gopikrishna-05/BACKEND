@@ -26,13 +26,13 @@ pipeline {
                 sh 'npm install'
             }
         }
-        stage('Deploy') {
-            when {
-                expression { env.GIT_BRANCH != "origin/main" }
-            }
+        stage('Docker build') {
             steps {
-                sh "echo This is deploy" 
-               // error "pipeline failed"
+
+                sh """"
+                docker build -t gopikrishna/backend:${appVersion}
+                docker images
+                """
             }
         }
     }
