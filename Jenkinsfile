@@ -14,10 +14,10 @@ pipeline {
     stages {
         stage('Read the version') {
             steps {
-                script{
-                    def packageJson = readJSON file: 'package.json'
-                    appVersion = packageJson.version
-                    echo "App version: ${appVersion}"
+                script {
+                  def packageJson = readJSON file: 'package.json'
+                  env.appVersion = packageJson.version
+                 echo "App version: ${env.appVersion}"
                 }
             }
         }
@@ -28,11 +28,8 @@ pipeline {
         }
         stage('Docker build') {
             steps {
-
-                sh """
-                docker build -t gopikrishna05/backend:${appVersion} .
-                docker images
-                """
+             sh "docker build -t gopikrishna05/backend:${env.appVersion} ."
+             sh "docker images"
             }
         }
     }
