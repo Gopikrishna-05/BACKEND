@@ -32,21 +32,21 @@ pipeline {
             }
         }
         stage('Docker build') {
-            steps {
+                steps {
+                    withAWS(region: 'us-east-1', credentials: 'aws-creds') {
+                            sh """
+                            aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${account_id}.dkr.ecr.us-east-1.amazonaws.com
 
-             sh """
+                            docker build -t {account_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${environment}/${component}:${appVersion} .
 
-             aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${account_id}.dkr.ecr.us-east-1.amazonaws.com
+                            docker images
 
-             docker build -t {account_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${environment}/${component}:${appVersion} .
+                            docker push ${account_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${environment}/${component}:${appVersion} 
 
-             docker images
-
-             docker push ${account_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${environment}/${component}:${appVersion} 
-
-             """
+                            """
+                    }
+                }
             }
-        }
     }
      
     post {
