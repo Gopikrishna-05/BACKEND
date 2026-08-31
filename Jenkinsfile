@@ -10,6 +10,11 @@ pipeline {
     environment {
         DEBUG = 'true'
         appVersion = '' // this will become global, we can use across pipeline
+        region = 'us-east-1'
+        account_id = '945488516062'
+        project = 'expense'
+        environment = 'dev'
+        component = 'backend'
     }
     stages {
         stage('Read the version') {
@@ -28,8 +33,18 @@ pipeline {
         }
         stage('Docker build') {
             steps {
-             sh "docker build -t gopikrishna05/backend:${env.appVersion} ."
-             sh "docker images"
+
+             sh """
+
+             aws ecr get-login-password --region ${region} | docker login --username AWS --password-stdin ${account_id}.dkr.ecr.us-east-1.amazonaws.com
+
+             docker build -t {account_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${environment}/${component}:${appVersion} .
+
+             docker images
+
+             docker push ${account_id}.dkr.ecr.us-east-1.amazonaws.com/${project}/${environment}/${component}:${appVersion} 
+
+             """
             }
         }
     }
